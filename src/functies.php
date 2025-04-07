@@ -1,23 +1,6 @@
 <?php
 // start session
 session_start();
-//website
-//klantkaart.dpcsolutions.nl
-
-// db site
-// http://83.137.145.19:8880/phpmyadmin/
-// db site user
-// Klanten-Kaart_dPC_
-// db site www
-// &fv3.Yg>w#2f7jF91.R
-
-// ftp filezilla
-// host
-// 83.137.145.19
-// gebruiker
-// klanten-kaart_dpc_
-// www
-// 4y75gB&Kg+w9?
 function db()
 {
     // Create connection
