@@ -4,7 +4,11 @@ session_start();
 function db()
 {
     // Create connection
-    $conn = new mysqli("localhost", "Klanten-Kaart_dPC_", "&fv3.Yg>w#2f7jF91.R", "_dpc_Klant-Kaart_12524");
+    $host = 'localhost';
+    $user = 'root';
+    $ww = '';
+    $database = '_dpc_Klant-Kaart_12524';
+    $conn = new mysqli($host, $user, $ww, $database);
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
