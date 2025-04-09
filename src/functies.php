@@ -32,15 +32,15 @@ function login($email, $ww)
         $result = db()->query($sql);
         if ($result->num_rows > 0) {
             while ($data = $result->fetch_assoc()) {
-                    if ($data['actief'] == 'actief') {
-                        $_SESSION['inlog'] = true;
-                        $_SESSION['id'] = $data['id'];
-                        $_SESSION['rol'] = $data['rol'];
-                        header("Location: pages/index.php");
-                        die();
-                    }
-                    $error = 'Uw account staat momenteel uit';
-                    return $error;
+                if ($data['actief'] == 'actief') {
+                    $_SESSION['inlog'] = true;
+                    $_SESSION['id'] = $data['id'];
+                    $_SESSION['rol'] = $data['rol'];
+                    header("Location: pages/index.php");
+                    die();
+                }
+                $error = 'Uw account staat momenteel uit';
+                return $error;
             }
         } else {
             $error = 'Wachtwoord of email is niet correct';
@@ -49,31 +49,7 @@ function login($email, $ww)
     }
 }
 
-//functie om de resultaten van alle aanbiedingen te filteren zodra je ingelogt bent
-function zoekaanbieding($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief)
-{
-    $sql = "SELECT * FROM aanbieding";
-    //korting
-    if ($kortingmax != null) {
-        //korting-punten
-        if ($kortingmax != null) {
-            $sql = $sql . " WHERE prijs BETWEEN $kortingmin AND $kortingmax AND punten BETWEEN $puntenmin AND $puntenmax";
-            //categorie
-            if ($categorie != null) {
-                $sql = $sql . " AND categorie = '$categorie'";
-                //categorie-actief
-                if ($actief != null) {
-                    $sql = $sql . " AND actief = '$actief'";
-                }
-            }
-            //actief
-            elseif ($actief != null) {
-                $sql = $sql . " AND actief = '$actief'";
-            }
-        }
-    }
-    return $sql . " ORDER BY id DESC";
-}
+
 
 // functie om de resultaten van alle aanbiedingen voor inloggen te zoeken
 function zoekaanbiedinguitlog($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie)
@@ -195,117 +171,186 @@ function zoekbonadmin($bonid, $gebruikt)
     return $sql . " ORDER BY datum DESC LIMIT 6";
 }
 
+function zoek($table, $zoektermen, $row)
+{
+    $sql = $sql = "SELECT * FROM $table WHERE";
+    for ($i = 0; $i <= count($row) - 1; $i++) {
+        if ($zoektermen[$i] != NULL) {
+            if ($i == 0) {
+                $sql = $sql . " $row[$i] LIKE '%$zoektermen[$i]%'";
+            } elseif ($i == count($row) - 1) {
+                $sql = $sql . " AND $row[$i] = '$zoektermen[$i]'";
+            } else {
+                $sql = $sql . " AND $row[$i] LIKE '%$zoektermen[$i]%'";
+            }
+        }
+    }
+    echo $sql;
+    return $sql;
+}
+
+function zoekaanbieding2($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief)
+{
+    $zoekterm = array($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief);
+    for ($i = 0; $i <= count($zoekterm) - 1; $i++) {
+        if ($zoekterm[$i] != null) {
+
+        }
+    }
+}
+//functie om de resultaten van alle aanbiedingen te filteren zodra je ingelogt bent
+function zoekaanbieding($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief)
+{
+    $sql = "SELECT * FROM aanbieding";
+    //korting
+    if ($kortingmax != null) {
+        //korting-punten
+        if ($kortingmax != null) {
+            $sql = $sql . " WHERE prijs BETWEEN $kortingmin AND $kortingmax AND punten BETWEEN $puntenmin AND $puntenmax";
+            //categorie
+            if ($categorie != null) {
+                $sql = $sql . " AND categorie = '$categorie'";
+                //categorie-actief
+                if ($actief != null) {
+                    $sql = $sql . " AND actief = '$actief'";
+                }
+            }
+            //actief
+            elseif ($actief != null) {
+                $sql = $sql . " AND actief = '$actief'";
+            }
+        }
+    }
+    echo $sql;
+    return $sql . " ORDER BY id DESC";
+}
+
 //functie om de resultaten van alle klanten te filteren
 function zoekklant($actief, $voornaam, $achternaam, $bedrijf)
 {
     $sql = "SELECT * FROM gebruikers WHERE";
-    //voornaam
-    if ($voornaam != NULL) {
-        $sql = $sql . " voornaam LIKE '%$voornaam%'";
-        //voornaam-actief
-        if ($actief != NULL) {
-            $sql = $sql . " AND actief = '$actief'";
-            //voornaam-actief-achternaam
-            if ($achternaam != NULL) {
-                $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-                //voornaam-actief-achternaam-bedrijf
-                if ($bedrijf  != NULL) {
-                    $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-                }
-            }
-            //voornaam-actief-bedrijf
-            elseif ($bedrijf  != NULL) {
-                $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-                //voornaam-actief-bedrijf-achternaam
-                if ($achternaam != NULL) {
-                    $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-                }
-            }
-        }
-        //voornaam-achternaam
-        elseif ($achternaam != NULL) {
-            $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-            //voornaam-achternaam-actief
-            if ($actief != NULL) {
-                $sql = $sql . " AND actief = '$actief'";
-                //voornaam-achternaam-actief-bedrijf
-                if ($bedrijf  != NULL) {
-                    $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-                }
-            }
-            //voornaam-achternaam-bedrijf
-            elseif ($bedrijf  != NULL) {
-                $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-                //voornaam-achternaam-bedrijf-actief
-                if ($actief != NULL) {
-                    $sql = $sql . " AND actief = '$actief'";
-                }
-            }
-        }
-        //voornaam-bedrijf
-        elseif ($bedrijf  != NULL) {
-            $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-            //voornaam-bedrijf-actief
-            if ($actief != NULL) {
-                $sql = $sql . " AND actief = '$actief'";
-                //voornaam-bedrijf-actief-achternaam
-                if ($achternaam != NULL) {
-                    $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-                }
-            }
-            //voornaam-bedrijf-achternaam
-            elseif ($achternaam != NULL) {
-                $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-                //voornaam-bedrijf-achternaam-actief
-                if ($actief != NULL) {
-                    $sql = $sql . " AND actief = '$actief'";
-                }
+    $zoekterm = array($voornaam, $achternaam, $bedrijf, $actief);
+    $row = array("voornaam", "achternaam", "bedrijf", "actief");
+    for ($i = 0; $i <= count($row) - 1; $i++) {
+        if ($zoekterm[$i] != NULL) {
+            if ($i == 0) {
+                $sql = $sql . " $row[$i] LIKE '%$zoekterm[$i]%'";
+            } elseif ($i == count($row) - 1) {
+                $sql = $sql . " AND $row[$i] = '$zoekterm[$i]'";
+            } else {
+                $sql = $sql . " AND $row[$i] LIKE '%$zoekterm[$i]%'";
             }
         }
     }
-    //achternaam
-    elseif ($achternaam != NULL) {
-        $sql = $sql . " achternaam LIKE '%$achternaam%'";
-        //achternaam-actief
-        if ($actief != NULL) {
-            $sql = $sql . " AND actief = '$actief'";
-            //achternaam-actief-bedrijf
-            if ($bedrijf  != NULL) {
-                $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-            }
-        }
-        //achternaam-bedrijf
-        elseif ($bedrijf  != NULL) {
-            $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
-            //achternaam-bedrijf-actief
-            if ($actief != NULL) {
-                $sql = $sql . " AND actief = '$actief'";
-            }
-        }
-    }
-    //bedrijf
-    elseif ($bedrijf  != NULL) {
-        $sql = $sql . " bedrijf LIKE '%$bedrijf%'";
-        //bedrijf-actief
-        if ($actief != NULL) {
-            $sql = $sql . " AND actief = '$actief'";
-            //bedrijf-actief-achternaam
-            if ($achternaam != NULL) {
-                $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-            }
-        }
-        //bedrijf-achternaam
-        elseif ($achternaam != NULL) {
-            $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
-            //bedrijf-achternaam-actief
-            if ($actief != NULL) {
-                $sql = $sql . " AND actief = '$actief'";
-            }
-        }
-    }
-    //actief
-    elseif ($actief != NULL) {
-        $sql = $sql . " actief='$actief'";
-    }
+    echo $sql;
+    // //voornaam
+    // if ($voornaam != NULL) {
+    //     $sql = $sql . " voornaam LIKE '%$voornaam%'";
+    //     //voornaam-actief
+    //     if ($actief != NULL) {
+    //         $sql = $sql . " AND actief = '$actief'";
+    //         //voornaam-actief-achternaam
+    //         if ($achternaam != NULL) {
+    //             $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //             //voornaam-actief-achternaam-bedrijf
+    //             if ($bedrijf  != NULL) {
+    //                 $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //             }
+    //         }
+    //         //voornaam-actief-bedrijf
+    //         elseif ($bedrijf  != NULL) {
+    //             $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //             //voornaam-actief-bedrijf-achternaam
+    //             if ($achternaam != NULL) {
+    //                 $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //             }
+    //         }
+    //     }
+    //     //voornaam-achternaam
+    //     elseif ($achternaam != NULL) {
+    //         $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //         //voornaam-achternaam-actief
+    //         if ($actief != NULL) {
+    //             $sql = $sql . " AND actief = '$actief'";
+    //             //voornaam-achternaam-actief-bedrijf
+    //             if ($bedrijf  != NULL) {
+    //                 $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //             }
+    //         }
+    //         //voornaam-achternaam-bedrijf
+    //         elseif ($bedrijf  != NULL) {
+    //             $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //             //voornaam-achternaam-bedrijf-actief
+    //             if ($actief != NULL) {
+    //                 $sql = $sql . " AND actief = '$actief'";
+    //             }
+    //         }
+    //     }
+    //     //voornaam-bedrijf
+    //     elseif ($bedrijf  != NULL) {
+    //         $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //         //voornaam-bedrijf-actief
+    //         if ($actief != NULL) {
+    //             $sql = $sql . " AND actief = '$actief'";
+    //             //voornaam-bedrijf-actief-achternaam
+    //             if ($achternaam != NULL) {
+    //                 $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //             }
+    //         }
+    //         //voornaam-bedrijf-achternaam
+    //         elseif ($achternaam != NULL) {
+    //             $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //             //voornaam-bedrijf-achternaam-actief
+    //             if ($actief != NULL) {
+    //                 $sql = $sql . " AND actief = '$actief'";
+    //             }
+    //         }
+    //     }
+    // }
+    // //achternaam
+    // elseif ($achternaam != NULL) {
+    //     $sql = $sql . " achternaam LIKE '%$achternaam%'";
+    //     //achternaam-actief
+    //     if ($actief != NULL) {
+    //         $sql = $sql . " AND actief = '$actief'";
+    //         //achternaam-actief-bedrijf
+    //         if ($bedrijf  != NULL) {
+    //             $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //         }
+    //     }
+    //     //achternaam-bedrijf
+    //     elseif ($bedrijf  != NULL) {
+    //         $sql = $sql . " AND bedrijf LIKE '%$bedrijf%'";
+    //         //achternaam-bedrijf-actief
+    //         if ($actief != NULL) {
+    //             $sql = $sql . " AND actief = '$actief'";
+    //         }
+    //     }
+    // }
+    // //bedrijf
+    // elseif ($bedrijf  != NULL) {
+    //     $sql = $sql . " bedrijf LIKE '%$bedrijf%'";
+    //     //bedrijf-actief
+    //     if ($actief != NULL) {
+    //         $sql = $sql . " AND actief = '$actief'";
+    //         //bedrijf-actief-achternaam
+    //         if ($achternaam != NULL) {
+    //             $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //         }
+    //     }
+    //     //bedrijf-achternaam
+    //     elseif ($achternaam != NULL) {
+    //         $sql = $sql . " AND achternaam LIKE '%$achternaam%'";
+    //         //bedrijf-achternaam-actief
+    //         if ($actief != NULL) {
+    //             $sql = $sql . " AND actief = '$actief'";
+    //         }
+    //     }
+    // }
+    // //actief
+    // elseif ($actief != NULL) {
+    //     $sql = $sql . " actief='$actief'";
+    // }
+    // // echo $sql;
     return $sql;
 }

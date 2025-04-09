@@ -22,7 +22,15 @@ if (isset($_POST['search'])) {
     unset($_POST['achternaam']);
     unset($_POST['bedrijf']);
     unset($_POST['actief']);
-    $sql = zoekklant($actief, $voornaam, $achternaam, $bedrijf);
+
+
+
+    // $sql = zoekklant($actief, $voornaam, $achternaam, $bedrijf);
+    $search = array($voornaam, $achternaam, $bedrijf, $actief);
+    $row = array("voornaam","achternaam","bedrijf","actief");
+    $sql = zoek("gebruikers", $search, $row);
+
+
     $start = 9 * ($_GET['page'] - 1);
     $result_totaal = db()->query($sql);
     if ($_GET['page'] == 1) {

@@ -14,7 +14,14 @@
             if (isset($_POST['gebruikt'])) {
                 $gebruikt = $_POST['gebruikt'];
             }
+
+
+
             $sql = zoekbon($bonid, $gebruikt, $_SESSION['id']);
+
+
+
+            
             $start = 12 * ($_GET['page'] - 1);
             $result_totaal = db()->query($sql);
             if ($_GET['page'] == 1) {
