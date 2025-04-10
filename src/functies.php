@@ -108,28 +108,6 @@ function zoekbonprofiel($bonid, $gebruikt, $profielid)
 }
 
 //functie om resultaten op de admin profiel pagina te filteren
-function zoekbonadmin($bonid, $gebruikt)
-{
-    $sql = "SELECT * FROM bestelling";
-    //bonid
-    if ($bonid != null) {
-        $sql = $sql . " WHERE id = '$bonid'";
-        //bonid-gebruikt admin
-        if ($gebruikt != null) {
-            $sql = $sql . " AND gebruikt = '$gebruikt'";
-        }
-    }
-    //gebruikt
-    elseif ($gebruikt != null) {
-        $sql = $sql . " WHERE gebruikt = '$gebruikt'";
-        //gebruikt-bonid admin
-        if ($bonid != null) {
-            $sql = $sql . " AND id = '$bonid'";
-        }
-    }
-    echo $sql;
-    return $sql . " ORDER BY datum DESC LIMIT 6";
-}
 
 
 
