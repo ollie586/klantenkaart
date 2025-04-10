@@ -84,47 +84,6 @@ function zoekaanbiedingproduct($orgineelmin, $orgineelmax, $product, $productid)
     return $sql;
 }
 
-//functie om de resultaten van alle bonnen te filteren
-function zoekbon($bonid, $gebruikt, $id)
-{
-    $sql = "SELECT * FROM bestelling";
-    //bonid
-    if ($bonid != null) {
-        if ($_SESSION['rol'] == 1) {
-            $sql = $sql . " WHERE id = '$bonid'";
-            //gebruikt admin
-            if ($gebruikt != null) {
-                $sql = $sql . " AND gebruikt = '$gebruikt'";
-            }
-        } elseif ($_SESSION['rol'] == 0) {
-            $id = $_SESSION['id'];
-            $sql = $sql . " WHERE gebruikerid = $id AND id = '$bonid'";
-            //gebruikt klant
-            if ($gebruikt != null) {
-                $sql = $sql . " AND gebruikt = '$gebruikt'";
-            }
-        }
-    }
-    //gebruikt
-    elseif ($gebruikt != null) {
-        if ($_SESSION['rol'] == 1) {
-            $sql = $sql . " WHERE gebruikt = '$gebruikt'";
-            //bonid admin
-            if ($bonid != null) {
-                $sql = $sql . " AND id = '$bonid'";
-            }
-        } elseif ($_SESSION['rol'] == 0) {
-            $id = $_SESSION['id'];
-            $sql = $sql . " WHERE gebruikerid = $id AND gebruikt = '$gebruikt'";
-            //bonid klant
-            if ($bonid != null) {
-                $sql = $sql . " AND id = '$bonid'";
-            }
-        }
-    }
-    return $sql . " ORDER BY datum DESC";
-}
-
 //functie om resultaten van alle bestellingen te filteren op de profiel pagina
 function zoekbonprofiel($bonid, $gebruikt, $profielid)
 {
@@ -168,8 +127,11 @@ function zoekbonadmin($bonid, $gebruikt)
             $sql = $sql . " AND id = '$bonid'";
         }
     }
+    echo $sql;
     return $sql . " ORDER BY datum DESC LIMIT 6";
 }
+
+
 
 function zoek($table, $zoektermen, $row)
 {
@@ -185,45 +147,53 @@ function zoek($table, $zoektermen, $row)
             }
         }
     }
-    echo $sql;
+    // echo $sql;
     return $sql;
 }
 
-function zoekaanbieding2($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief)
+//functie om de resultaten van alle bonnen te filteren
+function zoekbon($zoektermen, $row, $admin)
 {
-    $zoekterm = array($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief);
-    for ($i = 0; $i <= count($zoekterm) - 1; $i++) {
-        if ($zoekterm[$i] != null) {
-
-        }
+    $sql = "SELECT * FROM bestelling";
+    for($i = 0; $i < count($zoektermen) - 1; $i++){
+        if($zoektermen[$i] != null){
+            if($i == 0){
+                $sql = $sql . " WHERE $row[$i] = '$zoektermen[$i]'";
+            }else{
+                $sql = $sql . " AND $row[$i] = '$zoektermen[$i]'";
+            }
+        }    
     }
+    // echo $sql;
+    if($admin == "ja"){
+        return $sql . " ORDER BY datum DESC LIMIT 6";
+    }
+    if($admin == "nee"){
+       return $sql . " ORDER BY datum DESC"; 
+    }
+    
 }
+
 //functie om de resultaten van alle aanbiedingen te filteren zodra je ingelogt bent
-function zoekaanbieding($kortingmin, $kortingmax, $puntenmin, $puntenmax, $categorie, $actief)
+function zoekaanbieding($zoektermen, $prijs, $row)
 {
     $sql = "SELECT * FROM aanbieding";
-    //korting
-    if ($kortingmax != null) {
-        //korting-punten
-        if ($kortingmax != null) {
-            $sql = $sql . " WHERE prijs BETWEEN $kortingmin AND $kortingmax AND punten BETWEEN $puntenmin AND $puntenmax";
-            //categorie
-            if ($categorie != null) {
-                $sql = $sql . " AND categorie = '$categorie'";
-                //categorie-actief
-                if ($actief != null) {
-                    $sql = $sql . " AND actief = '$actief'";
-                }
-            }
-            //actief
-            elseif ($actief != null) {
-                $sql = $sql . " AND actief = '$actief'";
+    for ($i = 0; $i <= count($zoektermen) - 1; $i++) {
+        if ($zoektermen[$i] != null) {
+            if ($i == 0) {
+                $sql = $sql . " WHERE $row[$i] BETWEEN $prijs[0] AND $prijs[1] AND punten BETWEEN $prijs[2] AND $prijs[3]";
+            }elseif($i == count($zoektermen) - 1){
+                $sql = $sql . " AND $row[$i] = '$zoektermen[$i]'";
+            }else{
+                $sql = $sql . " AND $row[$i] = '$zoektermen[$i]'";
             }
         }
     }
-    echo $sql;
+    // echo $sql;
     return $sql . " ORDER BY id DESC";
 }
+
+
 
 //functie om de resultaten van alle klanten te filteren
 function zoekklant($actief, $voornaam, $achternaam, $bedrijf)

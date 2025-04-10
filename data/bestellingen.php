@@ -17,9 +17,11 @@
 
 
 
-            $sql = zoekbon($bonid, $gebruikt, $_SESSION['id']);
+            // $sql = zoekbon($bonid, $gebruikt, $_SESSION['id']);
+            $row = array("id","gebruikt");
+            $zoektermen = array($bonid, $gebruikt);
 
-
+            $sql = zoekbon($zoektermen, $row, "nee");
 
             
             $start = 12 * ($_GET['page'] - 1);

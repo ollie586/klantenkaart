@@ -69,7 +69,9 @@
                     $gebruikt = $_POST['gebruikt'];
                 }
                 // zorgt ervoor dat je bestellingen kunt zoeken
-                $sql = zoekbonadmin($bonid, $gebruikt);
+                $row = array("id", "gebruikt");
+                $zoektermen = array($bonid, $gebruikt);
+                $sql = zoekbon($zoektermen, $row, "ja");
             } else {
                 $sql = "SELECT * FROM bestelling ORDER BY datum DESC LIMIT 6";
             }
@@ -180,7 +182,7 @@
                                                             <tr class="border-b-2 border-black">
                                                                 <th class="border-r-2 border-black bg-gray-300">Categorie:</th>
                                                                 <td class="pl-1">
-                                                                <?php $sql5 = 'SELECT * FROM categorie WHERE id =' . $data2['categorie']; 
+                                                                    <?php $sql5 = 'SELECT * FROM categorie WHERE id =' . $data2['categorie'];
                                                                     $result5 = db()->query($sql5);
                                                                     if ($result5->num_rows > 0) {
                                                                         // output data of each row
@@ -329,7 +331,7 @@ if ($result->num_rows > 0) {
                                 </div>
                             </div>
 
-                            <div class="flex space-x-2 lg:flex-row">                               
+                            <div class="flex space-x-2 lg:flex-row">
                                 <div class=" w-4/5">
                                     <label class="block font-medium text-gray-900">Straatnaam</label>
                                     <input type="text" name="straat" id="straat" value="<?php echo $data['straat'] ?>" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 " placeholder="straatnaam" required>

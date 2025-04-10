@@ -23,9 +23,6 @@ if (isset($_POST['search'])) {
     unset($_POST['bedrijf']);
     unset($_POST['actief']);
 
-
-
-    // $sql = zoekklant($actief, $voornaam, $achternaam, $bedrijf);
     $search = array($voornaam, $achternaam, $bedrijf, $actief);
     $row = array("voornaam","achternaam","bedrijf","actief");
     $sql = zoek("gebruikers", $search, $row);

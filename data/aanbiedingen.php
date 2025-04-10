@@ -68,11 +68,12 @@
         if (isset($_POST['actief'])) {
             $actief = $_POST['actief'];
         }
-
-
-        $sql = zoekaanbieding($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax, $categorie, $actief);
-
         
+        $row = array("prijs", "categorie", "actief");
+        $prijs = array($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax);
+        $zoektermen = array($prijs, $categorie, $actief);
+        $sql = zoekaanbieding($zoektermen, $prijs, $row);
+
         $start = 12 * ($_GET['page'] - 1);
         $result_totaal = db()->query($sql);
         if ($_GET['page'] == 1) {
