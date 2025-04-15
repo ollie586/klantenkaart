@@ -25,7 +25,7 @@ if (isset($_POST['search'])) {
 
     $search = array($voornaam, $achternaam, $bedrijf, $actief);
     $row = array("voornaam","achternaam","bedrijf","actief");
-    $sql = zoek("gebruikers", $search, $row);
+    $sql = zoek("gebruikers", $search, $row, null);
 
 
     $start = 9 * ($_GET['page'] - 1);

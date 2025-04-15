@@ -81,8 +81,13 @@
             if (isset($_POST['gebruikt'])) {
                 $gebruikt = $_POST['gebruikt'];
             }
+            $row = array("gebruikerid", "id", "gebruikt");
+    $zoektermen = array($id, $bonid, $gebruikt);
             // voor het zoeken van bestellingen
-            $sql = zoekbonprofiel($bonid, $gebruikt, $id);
+            // $sql = zoekbonprofiel($zoektermen, $row);
+            // $sql = zoekbon($zoektermen, $row, "nee", "ja");
+            // $sql = $sql . " LIMIT 6";
+            $sql = zoek("bestelling", $zoektermen, $row, "ja");
         } else {
             $sql = "SELECT * FROM bestelling WHERE gebruikerid = $id ORDER BY datum DESC";
         }

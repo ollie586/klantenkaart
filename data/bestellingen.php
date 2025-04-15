@@ -3,7 +3,8 @@
     <div class="flex items-center flex-col bg-white border-2 border-black my-5 lg:ml-5 py-2 lg:p-4 w-full lg:w-11/12 rounded">
         <h1 class="text-3xl font-bold">Bestellingen</h1>
         <?php
-        if(isset($_POST['zoeksql'])){}
+        if (isset($_POST['zoeksql'])) {
+        }
         if (isset($_POST['bestelzoek'])) {
             $bonid = NULL;
             $gebruikt = NULL;
@@ -18,12 +19,22 @@
 
 
             // $sql = zoekbon($bonid, $gebruikt, $_SESSION['id']);
-            $row = array("id","gebruikt");
-            $zoektermen = array($bonid, $gebruikt);
 
-            $sql = zoekbon($zoektermen, $row, "nee");
+            if ($_SESSION['rol'] == 1) {
+                $row = array("id", "gebruikt");
+                $zoektermen = array($bonid, $gebruikt);
+                // $sql = zoekbon($zoektermen, $row, "ja", "nee");
+                $sql = zoek("bestelling", $zoektermen, $row, "nee");
+            } elseif ($_SESSION['rol'] == 0) {
+                $row = array("gebruikerid", "id", "gebruikt");
+                $zoektermen = array($id, $bonid, $gebruikt);
+                // $sql = zoekbon($zoektermen, $row, "nee", "nee");
+                $sql = zoek("bestelling", $zoektermen, $row, "nee");
+            }
 
-            
+
+
+
             $start = 12 * ($_GET['page'] - 1);
             $result_totaal = db()->query($sql);
             if ($_GET['page'] == 1) {
@@ -161,12 +172,12 @@
                                                             </tr>
                                                             <tr class="border-b-2 border-black">
                                                                 <th class="border-r-2 border-black bg-gray-300">Megabyte:</th>
-                                                                <td class="pl-1"><?php echo $data2['punten']?></td>
+                                                                <td class="pl-1"><?php echo $data2['punten'] ?></td>
                                                             </tr>
                                                             <tr class="border-b-2 border-black">
                                                                 <th class="border-r-2 border-black bg-gray-300">Categorie:</th>
                                                                 <td class="pl-1">
-                                                                    <?php $sql5 = 'SELECT * FROM categorie WHERE id =' . $data2['categorie']; 
+                                                                    <?php $sql5 = 'SELECT * FROM categorie WHERE id =' . $data2['categorie'];
                                                                     $result5 = db()->query($sql5);
                                                                     if ($result5->num_rows > 0) {
                                                                         // output data of each row
@@ -357,12 +368,12 @@
                             </button>
                         </form>
                     <?php } else { ?>
-                    <a href="bestellingen.php?page=<?php echo $next ?>" class="block px-3 py-2 leading-tight text-black bg-white border border-gray-300 rounded-r-lg hover:bg-gray-200 hover:text-gray-700">
-                        <span class="sr-only">Next</span>
-                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                    </a>
+                        <a href="bestellingen.php?page=<?php echo $next ?>" class="block px-3 py-2 leading-tight text-black bg-white border border-gray-300 rounded-r-lg hover:bg-gray-200 hover:text-gray-700">
+                            <span class="sr-only">Next</span>
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </a>
                     <?php } ?>
                 </li>
             </ul>

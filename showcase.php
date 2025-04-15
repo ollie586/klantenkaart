@@ -34,8 +34,8 @@ include("src/functies.php");
             font-family: Poppins;
             src: url('https://fonts.googleapis.com/css?family=Poppins');
         }
-        body
-        {
+
+        body {
             font-family: Poppins;
             color: #3d3d3d;
         }
@@ -141,7 +141,10 @@ include("src/functies.php");
                 if (isset($_POST['actief'])) {
                     $actief = $_POST['actief'];
                 }
-                $sql = zoekaanbieding($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax, $categorie, $actief);
+                $row = array("prijs", "categorie", "actief");
+                $prijs = array($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax);
+                $zoektermen = array($prijs, $categorie, $actief);
+                $sql = zoek("aanbieding", $zoektermen, $row, "nee");
                 $start = 12 * ($_GET['page'] - 1);
                 $result_totaal = db()->query($sql);
                 if ($_GET['page'] == 1) {
@@ -421,7 +424,12 @@ include("src/functies.php");
                                         $orgineelmin = $_POST['orgineelmin'];
                                         $orgineelmax = $_POST['orgineelmax'];
                                     }
-                                    $sql2 = zoekaanbiedingproduct($orgineelmin, $orgineelmax, $product, $id2);
+                                    $row = array("prijs", "naam", "id"  );
+                                    $orgineel= array($orgineelmin, $orgineelmax, $product);
+                                    $zoektermen = array( $orgineel, $product, $id2);
+                                    $sql2 = zoek("product", $zoektermen , $row, "nee");
+                                    
+                                    // $sql2 = zoekaanbiedingproduct($orgineelmin, $orgineelmax, $product, $id2);
                                 } else {
                                     $sql2 = "SELECT * FROM product WHERE id = $id2";
                                 }

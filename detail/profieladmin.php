@@ -71,7 +71,8 @@
                 // zorgt ervoor dat je bestellingen kunt zoeken
                 $row = array("id", "gebruikt");
                 $zoektermen = array($bonid, $gebruikt);
-                $sql = zoekbon($zoektermen, $row, "ja");
+                // $sql = zoekbon($zoektermen, $row, "ja", "ja");
+                $sql = zoek("bestelling", $zoektermen, $row, "ja");
             } else {
                 $sql = "SELECT * FROM bestelling ORDER BY datum DESC LIMIT 6";
             }
@@ -128,8 +129,9 @@
                 ?>
         <?php }
     } ?>
+    <?php  ?>
         <div class="flex flex-row justify-center flex-wrap">
-            <?php
+            <?php  
             // haalt alle data voor de bestellingen
             $result = db()->query($sql);
             if ($result->num_rows > 0) {

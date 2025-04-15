@@ -72,9 +72,11 @@
         $row = array("prijs", "categorie", "actief");
         $prijs = array($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax);
         $zoektermen = array($prijs, $categorie, $actief);
-        $sql = zoekaanbieding($zoektermen, $prijs, $row);
+        $sql = zoek("aanbieding", $zoektermen, $row, "nee");
+
 
         $start = 12 * ($_GET['page'] - 1);
+        // echo $sql;
         $result_totaal = db()->query($sql);
         if ($_GET['page'] == 1) {
             $start = 0;
@@ -468,7 +470,10 @@
                             $orgineelmin = $_POST['orgineelmin'];
                             $orgineelmax = $_POST['orgineelmax'];
                         }
-                        $sql2 = zoekaanbiedingproduct($orgineelmin, $orgineelmax, $product, $id2);
+                        $row = array("prijs", "naam", "id"  );
+                                    $orgineel= array($orgineelmin, $orgineelmax, $product);
+                                    $zoektermen = array( $orgineel, $product, $id2);
+                                    $sql2 = zoek("product", $zoektermen , $row, "nee");
                     } else {
                         $sql2 = "SELECT * FROM product WHERE id = $id2";
                     }
