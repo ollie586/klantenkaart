@@ -67,7 +67,11 @@ function zoek($table, $zoektermen, $row, $profiel)
                    $sql = $sql . " $row[$i] LIKE '%$zoektermen[$i]%'"; 
                 }  
             } elseif ($i == count($row) - 1) {
-                $sql = $sql . " AND $row[$i] = '$zoektermen[$i]'";
+                $vul = " AND";
+                if($zoektermen[0] == null && $table == "bestelling" || $zoektermen[0] == null &&  $zoektermen[1] == null &&  $zoektermen[2] == null && $table == "gebruikers"){
+                    $vul = null;
+                }
+                $sql = $sql . "$vul $row[$i] = '$zoektermen[$i]'";
             } else {
                 $sql = $sql . " AND $row[$i] LIKE '%$zoektermen[$i]%'";
             }

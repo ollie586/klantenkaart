@@ -68,7 +68,7 @@
         if (isset($_POST['actief'])) {
             $actief = $_POST['actief'];
         }
-        
+
         $row = array("prijs", "categorie", "actief");
         $prijs = array($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax);
         $zoektermen = array($prijs, $categorie, $actief);
@@ -470,10 +470,10 @@
                             $orgineelmin = $_POST['orgineelmin'];
                             $orgineelmax = $_POST['orgineelmax'];
                         }
-                        $row = array("prijs", "naam", "id"  );
-                                    $orgineel= array($orgineelmin, $orgineelmax, $product);
-                                    $zoektermen = array( $orgineel, $product, $id2);
-                                    $sql2 = zoek("product", $zoektermen , $row, "nee");
+                        $row = array("prijs", "naam", "id");
+                        $orgineel = array($orgineelmin, $orgineelmax, $product);
+                        $zoektermen = array($orgineel, $product, $id2);
+                        $sql2 = zoek("product", $zoektermen, $row, "nee");
                     } else {
                         $sql2 = "SELECT * FROM product WHERE id = $id2";
                     }
