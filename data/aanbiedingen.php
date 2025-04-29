@@ -73,7 +73,7 @@
         $prijs = array($exclusiefmin, $exclusiefmax, $puntenmin, $puntenmax);
         $zoektermen = array($prijs, $categorie, $actief);
         $sql = zoek("aanbieding", $zoektermen, $row, "nee");
-
+        
 
         $start = 12 * ($_GET['page'] - 1);
         // echo $sql;
@@ -465,6 +465,7 @@
 
                         if (isset($_POST['zoekproduct'])) {
                             $product = $_POST['zoekproduct'];
+                            $product = mysqli_real_escape_string($product);
                         }
                         if (isset($_POST['orgineelmin']) && isset($_POST['orgineelmax'])) {
                             $orgineelmin = $_POST['orgineelmin'];

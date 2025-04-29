@@ -52,28 +52,28 @@ function login($email, $ww)
 //zoekfunctie
 function zoek($table, $zoektermen, $row, $profiel)
 {
-    $sql = $sql = "SELECT * FROM $table WHERE";
+    $sql = "SELECT * FROM $table WHERE";
     for ($i = 0; $i < count($row); $i++) {
         if ($zoektermen[$i] != NULL) {
             if ($i == 0) {
                 if($table == "aanbieding"){
-                    $sql = $sql . " $row[$i] BETWEEN " . $zoektermen[$i][0] . " AND " . $zoektermen[$i][1] . " AND punten BETWEEN " . $zoektermen[$i][2] . " AND " . $zoektermen[$i][3]; 
+                    $sql .= " $row[$i] BETWEEN " . $zoektermen[$i][0] . " AND " . $zoektermen[$i][1] . " AND punten BETWEEN " . $zoektermen[$i][2] . " AND " . $zoektermen[$i][3]; 
                 }elseif($table == "product"){
-                    $sql = $sql . " $row[$i] BETWEEN " . $zoektermen[$i][0] . " AND " . $zoektermen[$i][1];
+                    $sql .= " $row[$i] BETWEEN " . $zoektermen[$i][0] . " AND " . $zoektermen[$i][1];
                 }elseif($row[$i] == "gebruikerid" || $row[$i] == "id"){
-                    $sql = $sql . " $row[$i] = '$zoektermen[$i]'";
+                    $sql .= " $row[$i] = '$zoektermen[$i]'";
                 }
                 else{
-                   $sql = $sql . " $row[$i] LIKE '%$zoektermen[$i]%'"; 
+                   $sql .=  " $row[$i] LIKE '%$zoektermen[$i]%'"; 
                 }  
             } elseif ($i == count($row) - 1) {
                 $vul = " AND";
                 if($zoektermen[0] == null && $table == "bestelling" || $zoektermen[0] == null &&  $zoektermen[1] == null &&  $zoektermen[2] == null && $table == "gebruikers"){
                     $vul = null;
                 }
-                $sql = $sql . "$vul $row[$i] = '$zoektermen[$i]'";
+                $sql .= "$vul $row[$i] = '$zoektermen[$i]'";
             } else {
-                $sql = $sql . " AND $row[$i] LIKE '%$zoektermen[$i]%'";
+                $sql .= " AND $row[$i] LIKE '%$zoektermen[$i]%'";
             }
         }
     }
